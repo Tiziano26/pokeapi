@@ -1,59 +1,73 @@
-function solicitudAJAX(params) {
-    var url = "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0";
-    let tarjetas = document.querySelector("#nPokemon");
-    var objXMLHttpRequest = new XMLHttpRequest();
 
-    objXMLHttpRequest.onreadystatechange = function () {
-      if (objXMLHttpRequest.readyState === 4) {
-        if (objXMLHttpRequest.status === 200) {
-          let json = JSON.parse(objXMLHttpRequest.responseText);
-          tarjetas.data = json;
-        } else {
-          alert("Error Code: " + objXMLHttpRequest.status);
-          alert("Error Message: " + objXMLHttpRequest.statusText);
-        }
-      }
-    };
-    objXMLHttpRequest.open("GET", url);
-    objXMLHttpRequest.send();
+const listaPokemon =document.querySelector("#listaPokemon");
+    const botonesHeader = document.querySelectorAll(".btn-header");
+  let URL = "https://pokeapi.co/api/v2/pokemon/";
+
+  for (let i = 1; i<= 151; i++){
+    fetch(URL + i)
+        .then((response) => response.json())
+        .then(data => mostarPokemon(data))
   }
-  
-  function buscar() {
-    let tarjetas = document.querySelector("#ConteinerCard");
-    var data = document.querySelector("#nPokemon").data;
-    var busqueda = document.querySelector("#nPokemon").value - 1;
-    var url = data.results[busqueda].url;
 
-    if (busqueda >= 0) {
-      var objXMLHttpRequest = new XMLHttpRequest();
+  function mostarPokemon(poke){
+    let tipos = poke.types.map((type) =>  
+        `<p class="${type.type.name} tipo">${type.type.name}</p>`
+    );
+    tipos = tipos.join('');
 
-      objXMLHttpRequest.onreadystatechange = function () {
-        if (objXMLHttpRequest.readyState === 4) {
-          if (objXMLHttpRequest.status === 200) {
-            let json = JSON.parse(objXMLHttpRequest.responseText);
-            let nombre = json.name;
-            let uriImg = json.sprites.other.home.front_default;
-            let html =
-              `<div class="card" style="width: 18rem;">
-    <img src="` +
-              uriImg +
-              `" class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">` +
-              nombre +
-              `</h5>
-    </div>
-  </div>`;
-            tarjetas.innerHTML = html;
-          } else {
-            alert("Error Code: " + objXMLHttpRequest.status);
-            alert("Error Message: " + objXMLHttpRequest.statusText);
-          }
-        }
-      };
-      objXMLHttpRequest.open("GET", url);
-      objXMLHttpRequest.send();
-    } else {
-      alert("DEbe ingresar un numero de 1 a 20 para obtener un Pokemon valido");
+    let pokeId = poke.id.toString();
+    if (pokeId.length === 1){
+        pokeId = "00" + pokeId;
+    } else if (pokeId.length === 2){
+        pokeId = "0" + pokeId;
     }
+
+
+     const div = document.createElement("div");
+     div.classList.add("pokemon");
+     div.innerHTML = `
+     <p class="pokemon-id-back">#${pokeId}</p>
+     <div class="pokemon-imagen">
+         <img src="${poke.sprites.other["official-artwork"].front_default}" alt="${poke.name}">
+     </div>
+     <div class="pokemon-info">
+         <div class="nombre-contenedor">
+             <p class="pokemon-id">#${pokeId}</p>
+             <h2 class="pokemon-nombre">${poke.name}</h2>
+             <div class="pokemon-tipos">
+                 ${tipos}
+             </div>
+             <div class="pokemon-stats">
+                 <p class="stat">${poke.height}m</p>
+                 <p class="stat">${poke.weight}kg</p>
+             </div>
+         </div>
+     </div>
+ </div>`;
+ listaPokemon.append(div);
+
   }
+
+botonbuscar
+
+botonesHeader.forEach(boton=> boton.addEventListener("click", (event) =>{
+    const botonId = event.currentTarget.id;
+
+    listaPokemon.innerHTML = "";
+
+    for (let i = 1; i<= 151; i++){
+        fetch(URL + i)
+            .then((response) => response.json())
+            .then(data => {
+                if(botonId === "ver-todos"){
+                    mostarPokemon(data);
+                } 
+                else {
+                    const tipos = data.types.map(type => type.type.name);
+                if (tipos.some(tipo => tipo.includes(botonId))) {
+                    mostarPokemon(data);
+                }
+                }
+            })
+      }
+}))
