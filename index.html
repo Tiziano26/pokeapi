@@ -1,0 +1,37 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="ajax.css" />
+</head>
+
+<body onload="solicitudAJAX()">
+
+    <div class="container">
+
+        <header>
+            <img src="./img/descarga.jpg" alt="">
+            <h1>Pokeapi</h1>
+            <div class="inputButton">
+                <input type="number" id="nPokemon" class="form-control form-control-dark text-bg-dark"
+                    placeholder="Numero de Pokemon" data="" />
+
+                <button onclick="buscar()" class="boton">
+                    Buscar
+                </button>
+            </div>
+        </header>
+    </div>
+    </div>
+
+    <div id="wallet_container"></div>
+    <div id="ConteinerCard"></div>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
