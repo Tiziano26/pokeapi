@@ -1,12 +1,13 @@
 
 const listaPokemon =document.querySelector("#listaPokemon");
-    const botonesHeader = document.querySelectorAll(".btn-header");
-  let URL = "https://pokeapi.co/api/v2/pokemon/";
+const botonesHeader = document.querySelectorAll(".btn-header");
+const botonBuscar = document.querySelectorAll(".buscar");
+let URL = "https://pokeapi.co/api/v2/pokemon/";
 
   for (let i = 1; i<= 151; i++){
     fetch(URL + i)
         .then((response) => response.json())
-        .then(data => mostarPokemon(data))
+        .then(data =>  {mostarPokemon(data);listaPokemon.data = data;})
   }
 
   function mostarPokemon(poke){
@@ -44,11 +45,29 @@ const listaPokemon =document.querySelector("#listaPokemon");
          </div>
      </div>
  </div>`;
+
  listaPokemon.append(div);
 
   }
 
-botonbuscar
+  function buscar() {
+    let tarjetas = document.querySelector("#todos");
+    var data = document.querySelector("#listaPokemon").data;
+    console.dir(data);
+    var busqueda = document.querySelector("#listaPokemon").value - 1;
+    let URL = data.results[busqueda].URL;
+
+console.dir(data);
+    if(busqueda>=0){
+      fetch(URL)
+            .then((response) => response.json())
+            .then(data => {
+                if(botonId === "nPokemon"){
+                    mostarPokemon(data);
+                } 
+            })
+    }
+  }
 
 botonesHeader.forEach(boton=> boton.addEventListener("click", (event) =>{
     const botonId = event.currentTarget.id;
@@ -71,3 +90,4 @@ botonesHeader.forEach(boton=> boton.addEventListener("click", (event) =>{
             })
       }
 }))
+
